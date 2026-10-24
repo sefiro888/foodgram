@@ -1,0 +1,318 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Estudio de color Foodgram</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Informe editorial a una columna; cada candidata es una ficha con maqueta viva y puntuación. */
+:root{--bg:#FBF8F3;--surface:#fff;--line:#E8E1D7;--ink:#1F1A15;--muted:#6F655B;--acc:#C8381E;--ok:#2E7A4C;--bad:#B3261E;
+  --display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;--body:"Figtree",system-ui,sans-serif;--mono:"DM Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14110F;--surface:#1E1A17;--line:#332D28;--ink:#F6F0E8;--muted:#A89E93;--acc:#FF6B3D;--ok:#62D394;--bad:#FF8A80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14110F;--surface:#1E1A17;--line:#332D28;--ink:#F6F0E8;--muted:#A89E93;--acc:#FF6B3D;--ok:#62D394;--bad:#FF8A80;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.page{max-width:1080px;margin:0 auto;padding-block:48px 80px}
+h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;letter-spacing:-.03em;text-wrap:balance}
+.mono{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+header h1{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:800;font-variation-settings:"wdth" 80;margin:12px 0 18px;max-width:16ch}
+header p{font-size:1.15rem;color:var(--muted);max-width:60ch}
+section{margin-top:72px}
+section>h2{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:750;margin:8px 0 22px}
+.principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.pr{border-top:3px solid var(--ink);padding-top:14px}
+.pr h3{font-size:1.2rem;margin-bottom:8px}
+.pr p{color:var(--muted);font-size:.95rem}
+.pr.warn{border-color:var(--bad)}
+.cands{display:flex;flex-direction:column;gap:22px}
+.cand{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px;align-items:start}
+.cand.win{border:2px solid var(--acc)}
+.badge{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--acc);color:#fff;margin-left:8px;vertical-align:middle}
+.badge.no{background:var(--bad)}
+.cand h3{font-size:1.6rem;font-weight:750}
+.cand .why{color:var(--muted);margin:8px 0 16px;max-width:62ch}
+.sw{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.sw span{display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.sw i{width:52px;height:52px;border-radius:12px;border:1px solid var(--line);display:block}
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 22px}
+.sc{display:flex;flex-direction:column;gap:5px}
+.sc div{display:flex;justify-content:space-between;font-size:.86rem;font-weight:600}
+.sc div b{font-family:var(--mono);font-weight:500}
+.bar{height:7px;border-radius:7px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:7px;background:var(--ink)}
+/* Maqueta de teléfono */
+.phone{width:100%;max-width:240px;aspect-ratio:9/17;border-radius:30px;padding:10px;background:#0b0a09;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.screen{height:100%;border-radius:22px;overflow:hidden;background:var(--p-bg);color:var(--p-ink);display:flex;flex-direction:column;font-size:10px}
+.s-top{display:flex;justify-content:space-between;align-items:center;padding:12px 12px 6px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.04em}
+.s-top i{width:9px;height:9px;border-radius:50%;border:2px solid var(--p-acc);display:inline-block;margin:0 1px}
+.s-st{display:flex;gap:7px;padding:4px 12px 8px}
+.s-st b{width:30px;height:30px;border-radius:50%;background:var(--p-ring);padding:2px;display:block}
+.s-st b::after{content:"";display:block;width:100%;height:100%;border-radius:50%;background:var(--p-av);box-shadow:0 0 0 2px var(--p-bg)}
+.s-post{padding:0 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.s-h{display:flex;gap:6px;align-items:center;font-weight:700}
+.s-h i{width:16px;height:16px;border-radius:50%;background:var(--p-av)}
+.s-m{border-radius:6px;aspect-ratio:4/5;display:grid;place-items:center;padding:14%;
+  background-color:var(--p-mantel);background-image:linear-gradient(90deg,var(--p-cuadro) 50%,transparent 50%),linear-gradient(var(--p-cuadro) 50%,transparent 50%);background-size:14px 14px}
+.s-m svg{width:100%}
+.s-a{display:flex;gap:8px;align-items:center;font-weight:700}
+.s-a span{width:12px;height:12px;border-radius:50%;background:var(--p-acc)}
+.s-btn{margin-top:auto;margin-bottom:12px;background:var(--p-acc);color:var(--p-on);border-radius:8px;text-align:center;padding:7px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:620px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td{font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+tr.win td{font-weight:700}
+.final{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mode{border-radius:22px;padding:24px;border:1px solid var(--line)}
+.mode h3{font-size:1.4rem;margin-bottom:12px}
+.tok{display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(127,127,127,.2);font-size:.9rem}
+.tok:last-child{border:0}
+.tok i{width:36px;height:36px;border-radius:10px;border:1px solid rgba(127,127,127,.3)}
+.tok code{font-family:var(--mono);font-size:.78rem}
+.mantels{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.mantels span{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;font-weight:600}
+.mantels i{width:72px;height:72px;border-radius:16px;background-image:linear-gradient(90deg,rgba(255,255,255,.45) 50%,transparent 50%),linear-gradient(rgba(255,255,255,.45) 50%,transparent 50%);background-size:16px 16px}
+.ringdemo{display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.ringdemo div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.85rem;font-weight:600}
+.ringdemo b{width:76px;height:76px;border-radius:50%;padding:3px;display:block}
+.ringdemo b::after{content:"";display:block;width:100%;height:100%;border-radius:50%;background:var(--surface);box-shadow:0 0 0 3px var(--bg)}
+.note{color:var(--muted);font-size:.85rem;margin-top:12px;max-width:70ch}
+@media (max-width:760px){.cand{grid-template-columns:1fr}.phone{margin:0 auto}.final{grid-template-columns:1fr}}
+</style>
+</head><body><div class="page">
+<header><p class="mono">Estudio de color · Foodgram · Octubre 2026</p>
+<h1>¿De qué color tiene que ser una app de comida?</h1>
+<p>Comparamos cinco paletas con cuatro criterios: si abren el apetito, si dejan que la comida sea la protagonista, si se distinguen de Instagram y si cumplen el contraste de accesibilidad. La ganadora se aplica ya a la app.</p></header>
+
+<section><p class="mono">01 · Criterios</p><h2>Lo que hay que tener en cuenta</h2>
+<div class="principles">
+<div class="pr"><h3>Los cálidos abren el apetito</h3><p>Rojo, naranja y amarillo se asocian a fruta madura, fuego y energía. Por eso dominan en las marcas de comida y en los restaurantes.</p></div>
+<div class="pr warn"><h3>El azul lo frena</h3><p>Casi no hay alimentos azules, y un fondo azul o morado hace que la comida parezca menos apetecible. La versión actual de Foodgram usa manteles y fondo azules: hay que cambiarlo.</p></div>
+<div class="pr"><h3>La comida, protagonista</h3><p>Fondos neutros (blanco harina o carbón) y un único color de acento. Así destacan las fotos y las ilustraciones, como en un plato blanco.</p></div>
+<div class="pr"><h3>No parecer una copia</h3><p>Instagram es un degradado rosa y morado. Foodgram se apropia del fuego: azafrán, tomate y frambuesa, colores que también abren el apetito.</p></div>
+</div>
+<p class="note">Los criterios de apetito siguen los principios habituales de la psicología del color en marketing gastronómico. Son tendencias generales, no reglas exactas. El contraste está calculado con la fórmula WCAG 2.1, y el nivel AA exige 4,5:1 para texto normal.</p>
+</section>
+
+<section><p class="mono">02 · Candidatas</p><h2>Cinco paletas puestas a prueba</h2><div class="cands" id="cands"></div></section>
+
+<section><p class="mono">03 · Resultado</p><h2>Tabla comparativa</h2><div class="tw"><table id="tabla"></table></div></section>
+
+<section><p class="mono">04 · Decisión</p><h2>Harina de día, brasa de noche</h2>
+<p class="note" style="font-size:1rem;margin-bottom:20px">Los dos modos comparten la misma familia de acento (tomate en claro, ascua en oscuro), así la marca se reconoce en ambos. Los manteles solo usan tonos de alimento y el anillo de historias pasa a ser un degradado de fuego.</p>
+<div class="final" id="final"></div>
+<h3 style="margin-top:32px;font-size:1.3rem">Manteles: solo colores de comida</h3><div class="mantels" id="mantels"></div>
+<h3 style="margin-top:32px;font-size:1.3rem">Anillo de historias</h3>
+<div class="ringdemo"><div><b style="background:conic-gradient(from 210deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)"></b>Instagram</div><div><b style="background:conic-gradient(from 200deg,#F6B93B,#F06A35,#D9342B,#C2185B,#F6B93B)"></b>Foodgram: fuego</div></div>
+</section>
+</div>
+<script>
+// Ilustraciones de platos vistas desde arriba, generadas en SVG.
+// Cada receta tiene una semilla, así que su plato siempre se dibuja igual.
+(function () {
+  "use strict";
+  var uid = 0;
+
+  function seedOf(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) {
+    var a = seed >>> 0;
+    return function () { a = (a + 0x6D2B79F5) | 0; var t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  function n(v) { return Math.round(v * 10) / 10; }
+  function pick(R, a) { return a[Math.floor(R() * a.length)]; }
+  function polar(r, a) { return [100 + r * Math.cos(a), 100 + r * Math.sin(a)]; }
+  // Punto al azar dentro de un disco de radio máximo `max`.
+  function inDisc(R, max, min) { var r = (min || 0) + Math.sqrt(R()) * (max - (min || 0)), a = R() * Math.PI * 2; return polar(r, a); }
+  function sector(r, a1, a2, dx, dy) {
+    var p1 = polar(r, a1), p2 = polar(r, a2); dx = dx || 0; dy = dy || 0;
+    return "M" + n(100 + dx) + " " + n(100 + dy) + "L" + n(p1[0] + dx) + " " + n(p1[1] + dy) + "A" + r + " " + r + " 0 0 1 " + n(p2[0] + dx) + " " + n(p2[1] + dy) + "Z";
+  }
+
+  function plateBase(id, ceramic, well) {
+    return '<ellipse cx="104" cy="110" rx="90" ry="88" fill="#000" opacity=".32" filter="url(#' + id + 'b)"/>' +
+      '<circle cx="100" cy="100" r="92" fill="' + ceramic + '"/>' +
+      '<circle cx="100" cy="100" r="91" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/>' +
+      '<circle cx="100" cy="100" r="74" fill="' + well + '"/>' +
+      '<circle cx="100" cy="100" r="74" fill="none" stroke="#000" stroke-opacity=".09" stroke-width="2.5"/>' +
+      '<path d="M40 52A74 74 0 0 1 120 28" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>';
+  }
+  function defs(id) {
+    return '<filter id="' + id + 'b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>';
+  }
+
+  var FOOD = {
+    steak: function (R, id) {
+      var s = '<radialGradient id="' + id + 'm" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#b0603a"/><stop offset=".6" stop-color="#7d3b22"/><stop offset="1" stop-color="#4a2113"/></radialGradient>';
+      var g = plateBase(id, "#f4f1ea", "#ebe6dc");
+      g += '<g transform="rotate(' + n(-25 + R() * 14) + ' 100 100)">' +
+        '<path d="M50 98C48 74 78 62 104 64C138 66 154 82 152 104C150 130 120 142 92 140C64 138 52 122 50 98Z" fill="url(#' + id + 'm)" stroke="#3a190c" stroke-width="3"/>' +
+        '<path d="M60 80C76 66 110 62 136 72" fill="none" stroke="#f1d4a8" stroke-opacity=".75" stroke-width="5" stroke-linecap="round"/>';
+      for (var i = 0; i < 4; i++) g += '<path d="M' + (62 + i * 18) + ' 76L' + (88 + i * 18) + ' 132" stroke="#24100a" stroke-opacity=".55" stroke-width="3.2" stroke-linecap="round"/>';
+      g += '</g>';
+      g += '<ellipse cx="108" cy="102" rx="20" ry="13" fill="#ffd66b" opacity=".45"/>' +
+        '<rect x="96" y="90" width="22" height="18" rx="4" fill="#ffd66b" transform="rotate(14 107 99)"/>' +
+        '<rect x="99" y="92" width="9" height="4" rx="2" fill="#fff" opacity=".7" transform="rotate(14 107 99)"/>';
+      for (var t = 0; t < 4; t++) {
+        var p = inDisc(R, 66, 46), a = R() * Math.PI, len = 22;
+        var q = [p[0] + Math.cos(a) * len, p[1] + Math.sin(a) * len];
+        g += '<path d="M' + n(p[0]) + ' ' + n(p[1]) + 'L' + n(q[0]) + ' ' + n(q[1]) + '" stroke="#5d7a3a" stroke-width="1.2"/>';
+        for (var k = 1; k < 7; k++) g += '<circle cx="' + n(p[0] + (q[0] - p[0]) * k / 7 + (k % 2 ? 2.4 : -2.4)) + '" cy="' + n(p[1] + (q[1] - p[1]) * k / 7) + '" r="1.9" fill="' + pick(R, ["#6f9446", "#86ab55", "#58783a"]) + '"/>';
+      }
+      for (var c = 0; c < 3; c++) { var gp = inDisc(R, 66, 50); g += '<ellipse cx="' + n(gp[0]) + '" cy="' + n(gp[1]) + '" rx="6" ry="4" fill="#f6ecd6" stroke="#d8c8a4" transform="rotate(' + n(R() * 180) + ' ' + n(gp[0]) + ' ' + n(gp[1]) + ')"/>'; }
+      for (var f = 0; f < 18; f++) { var fp = inDisc(R, 46); g += '<rect x="' + n(fp[0]) + '" y="' + n(fp[1]) + '" width="2" height="1.6" fill="#fff" opacity=".85"/>'; }
+      return [s, g];
+    },
+    salad: function (R, id) {
+      var g = plateBase(id, "#5fa8b5", "#e9efdb"), i, p;
+      for (i = 0; i < 30; i++) { p = inDisc(R, 62); g += '<ellipse cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" rx="' + n(10 + R() * 7) + '" ry="' + n(5 + R() * 3) + '" fill="' + pick(R, ["#4fae5d", "#7cc668", "#3b8f4c", "#a5d77c"]) + '" transform="rotate(' + n(R() * 180) + ' ' + n(p[0]) + ' ' + n(p[1]) + ')"/>'; }
+      for (i = 0; i < 4; i++) { p = inDisc(R, 50); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="10" fill="none" stroke="#b8458f" stroke-width="2.2" opacity=".9"/>'; }
+      for (i = 0; i < 6; i++) { p = inDisc(R, 54); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="7" fill="#d4ebb0" stroke="#5f9b40" stroke-width="1.6"/><circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="3.6" fill="none" stroke="#a9cf86" stroke-width="1"/>'; }
+      for (i = 0; i < 6; i++) { p = inDisc(R, 52); var a = n(R() * 90); g += '<rect x="' + n(p[0] - 4.5) + '" y="' + n(p[1] - 4.5) + '" width="9" height="9" rx="1.5" fill="#fffaf0" stroke="#e1d5ba" transform="rotate(' + a + ' ' + n(p[0]) + ' ' + n(p[1]) + ')"/>'; }
+      for (i = 0; i < 7; i++) { p = inDisc(R, 54, 10); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="8" fill="#e5432d"/><path d="M' + n(p[0] - 5) + ' ' + n(p[1]) + 'H' + n(p[0] + 5) + 'M' + n(p[0]) + ' ' + n(p[1] - 5) + 'V' + n(p[1] + 5) + '" stroke="#f7a07f" stroke-width="1"/><circle cx="' + n(p[0] - 2.6) + '" cy="' + n(p[1] - 2.8) + '" r="2" fill="#fff" opacity=".5"/>'; }
+      for (i = 0; i < 5; i++) { p = inDisc(R, 54); g += '<ellipse cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" rx="5" ry="4" fill="#3a2b3f"/><circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="1.4" fill="#cdbfd6"/>'; }
+      return ["", g];
+    },
+    bread: function (R, id) {
+      var s = '<radialGradient id="' + id + 'l" cx=".45" cy=".35" r=".75"><stop offset="0" stop-color="#e8b571"/><stop offset=".7" stop-color="#bf7a34"/><stop offset="1" stop-color="#8c5020"/></radialGradient>';
+      var g = '<ellipse cx="104" cy="110" rx="90" ry="88" fill="#000" opacity=".32" filter="url(#' + id + 'b)"/><circle cx="100" cy="100" r="92" fill="#c79a67"/>';
+      for (var r = 20; r < 92; r += 9) g += '<circle cx="' + n(97 + R() * 6) + '" cy="' + n(97 + R() * 6) + '" r="' + r + '" fill="none" stroke="#b1824f" stroke-width="1.2" opacity=".6"/>';
+      g += '<circle cx="100" cy="100" r="91" fill="none" stroke="#e3c08f" stroke-width="1.5" opacity=".8"/>';
+      g += '<g transform="rotate(' + n(-30 + R() * 16) + ' 100 100)"><ellipse cx="100" cy="100" rx="68" ry="46" fill="url(#' + id + 'l)" stroke="#7c4519" stroke-width="2.5"/>' +
+        '<path d="M44 100C72 74 128 74 156 100" fill="none" stroke="#f6dfae" stroke-width="7" stroke-linecap="round"/>' +
+        '<path d="M46 103C74 79 126 79 154 103" fill="none" stroke="#a96a2c" stroke-width="1.6" stroke-linecap="round"/></g>';
+      for (var i = 0; i < 46; i++) { var p = inDisc(R, 52); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="' + n(.6 + R() * 1.4) + '" fill="#fff" opacity="' + n(.4 + R() * .45) + '"/>'; }
+      return [s, g];
+    },
+    pasta: function (R, id) {
+      var g = plateBase(id, "#f4f1ea", "#ebe6dc"), i;
+      for (var k = 0; k < 3; k++) {
+        var d = "", off = k * 2.1, pts = 70;
+        for (i = 0; i <= pts; i++) { var t = i / pts, a = off + t * Math.PI * 6, r = 6 + t * 50 + (R() - .5) * 4; var p = polar(r, a); d += (i ? "L" : "M") + n(p[0]) + " " + n(p[1]); }
+        g += '<path d="' + d + '" fill="none" stroke="' + ["#f1c95e", "#e8b84a", "#f6d77a"][k] + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
+        g += '<path d="' + d + '" fill="none" stroke="#fff3c4" stroke-opacity=".55" stroke-width="1.3" stroke-linecap="round"/>';
+      }
+      for (i = 0; i < 10; i++) { var b = inDisc(R, 50); g += '<rect x="' + n(b[0] - 4) + '" y="' + n(b[1] - 3) + '" width="8" height="6" rx="1.5" fill="#d98c5f" stroke="#a5552f" transform="rotate(' + n(R() * 90) + ' ' + n(b[0]) + ' ' + n(b[1]) + ')"/>'; }
+      for (i = 0; i < 6; i++) { var c = inDisc(R, 44); g += '<path d="M' + n(c[0]) + ' ' + n(c[1]) + 'q5 -3 10 0" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round"/>'; }
+      for (i = 0; i < 50; i++) { var q = inDisc(R, 56); g += '<circle cx="' + n(q[0]) + '" cy="' + n(q[1]) + '" r=".9" fill="#222"/>'; }
+      return ["", g];
+    },
+    soup: function (R, id) {
+      var s = '<radialGradient id="' + id + 's" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#f4743f"/><stop offset="1" stop-color="#bf3a1b"/></radialGradient>';
+      var g = plateBase(id, "#2f5d7c", "#284f6a") + '<circle cx="100" cy="100" r="62" fill="url(#' + id + 's)"/>', i;
+      var d = ""; for (i = 0; i <= 60; i++) { var t = i / 60, p = polar(2 + t * 34, t * Math.PI * 4.2); d += (i ? "L" : "M") + n(p[0]) + " " + n(p[1]); }
+      g += '<path d="' + d + '" fill="none" stroke="#fff3df" stroke-width="4" stroke-linecap="round" opacity=".92"/>';
+      for (i = 0; i < 14; i++) { var o = inDisc(R, 56); g += '<circle cx="' + n(o[0]) + '" cy="' + n(o[1]) + '" r="' + n(1.4 + R() * 2.2) + '" fill="#ffb36b" opacity=".7"/>'; }
+      for (i = 0; i < 6; i++) { var c = inDisc(R, 52, 30); g += '<rect x="' + n(c[0] - 4) + '" y="' + n(c[1] - 4) + '" width="8" height="8" rx="1.2" fill="#e2b062" stroke="#b07a2b" transform="rotate(' + n(R() * 90) + ' ' + n(c[0]) + ' ' + n(c[1]) + ')"/>'; }
+      for (i = 0; i < 3; i++) { var l = polar(18 + i * 4, -0.6 + i * .7); g += '<ellipse cx="' + n(l[0] + 24) + '" cy="' + n(l[1] - 18) + '" rx="9" ry="4.5" fill="#4f9e4f" transform="rotate(' + (i * 50 - 30) + ' ' + n(l[0] + 24) + ' ' + n(l[1] - 18) + ')"/>'; }
+      return [s, g];
+    },
+    eggs: function (R, id) {
+      var s = '<radialGradient id="' + id + 't" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#f8d777"/><stop offset="1" stop-color="#e2a634"/></radialGradient>';
+      var g = plateBase(id, "#f4f1ea", "#ebe6dc"), i;
+      var a1 = -1.15 + R() * .3, a2 = a1 + .75, mid = (a1 + a2) / 2, dx = Math.cos(mid) * 12, dy = Math.sin(mid) * 12;
+      g += '<circle cx="100" cy="100" r="62" fill="url(#' + id + 't)" stroke="#c78322" stroke-width="5"/>';
+      for (i = 0; i < 26; i++) { var p = inDisc(R, 54); g += '<ellipse cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" rx="' + n(3 + R() * 5) + '" ry="' + n(2 + R() * 3) + '" fill="' + pick(R, ["#fbe39a", "#d99a2c"]) + '" opacity=".5"/>'; }
+      g += '<path d="' + sector(65, a1, a2) + '" fill="#ebe6dc"/>';
+      g += '<path d="' + sector(62, a1, a2, dx, dy) + '" fill="#fbe7a6" stroke="#c78322" stroke-width="2"/>';
+      for (i = 0; i < 9; i++) { var r = 14 + R() * 40, a = a1 + .1 + R() * (a2 - a1 - .2), q = polar(r, a); g += '<circle cx="' + n(q[0] + dx) + '" cy="' + n(q[1] + dy) + '" r="' + n(1.5 + R() * 2) + '" fill="#f0cf70"/>'; }
+      return [s, g];
+    },
+    rice: function (R, id) {
+      var g = '<ellipse cx="104" cy="110" rx="96" ry="88" fill="#000" opacity=".32" filter="url(#' + id + 'b)"/>' +
+        '<rect x="0" y="92" width="22" height="16" rx="7" fill="#2d2f33"/><rect x="178" y="92" width="22" height="16" rx="7" fill="#2d2f33"/>' +
+        '<circle cx="100" cy="100" r="86" fill="#2d2f33"/><circle cx="100" cy="100" r="85" fill="none" stroke="#6b6e74" stroke-width="1.5"/>' +
+        '<circle cx="100" cy="100" r="76" fill="#e5ad36"/><circle cx="100" cy="100" r="72" fill="none" stroke="#9c5f16" stroke-width="7" opacity=".55"/>', i, p;
+      for (i = 0; i < 260; i++) { p = inDisc(R, 72); g += '<ellipse cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" rx="2.8" ry="1.1" fill="' + pick(R, ["#f2cb59", "#e8b53c", "#f7dc86", "#d99a25"]) + '" transform="rotate(' + n(R() * 180) + ' ' + n(p[0]) + ' ' + n(p[1]) + ')"/>'; }
+      for (i = 0; i < 8; i++) { p = inDisc(R, 58); g += '<rect x="' + n(p[0] - 9) + '" y="' + n(p[1] - 2) + '" width="18" height="4" rx="2" fill="#d6402a" transform="rotate(' + n(R() * 180) + ' ' + n(p[0]) + ' ' + n(p[1]) + ')"/>'; }
+      for (i = 0; i < 16; i++) { p = inDisc(R, 62); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="2.5" fill="#7cc152" stroke="#58962f" stroke-width=".6"/>'; }
+      for (i = 0; i < 5; i++) { p = polar(38, i * 1.2566 + R() * .3); g += '<path transform="translate(' + n(p[0] - 14) + ' ' + n(p[1] - 4) + ') rotate(' + n(i * 72) + ' 14 4)" d="M0 0C10 -14 28 -12 30 4C24 -4 10 -4 2 8Z" fill="#f08a5d" stroke="#bd512c" stroke-width="1.2"/>'; }
+      for (i = 0; i < 3; i++) { var a = i * 2.09 + .5; p = polar(60, a); var deg = n(a * 180 / Math.PI + 90); g += '<g transform="translate(' + n(p[0]) + ' ' + n(p[1]) + ') rotate(' + deg + ')"><path d="M-12 0A12 12 0 0 1 12 0Z" fill="#ffe066" stroke="#e1a800" stroke-width="1.5"/><path d="M0 0L-7 -7M0 0V-10M0 0L7 -7" stroke="#fff4b3" stroke-width="1"/></g>'; }
+      return ["", g];
+    },
+    cake: function (R, id) {
+      var s = '<radialGradient id="' + id + 'k" cx=".5" cy=".5" r=".55"><stop offset="0" stop-color="#d79443"/><stop offset=".55" stop-color="#9c5021"/><stop offset="1" stop-color="#3f1d0c"/></radialGradient>';
+      var g = plateBase(id, "#f4f1ea", "#ebe6dc"), i;
+      var w = ""; for (i = 0; i <= 48; i++) { var p = polar(70 + (R() - .5) * 4, i / 48 * Math.PI * 2); w += (i ? "L" : "M") + n(p[0]) + " " + n(p[1]); }
+      g += '<path d="' + w + 'Z" fill="#f2e9d6" stroke="#ddcfb2" stroke-width="1.5"/>';
+      g += '<circle cx="100" cy="100" r="62" fill="url(#' + id + 'k)"/>';
+      for (i = 0; i < 16; i++) { var b = inDisc(R, 52, 26); g += '<circle cx="' + n(b[0]) + '" cy="' + n(b[1]) + '" r="' + n(5 + R() * 9) + '" fill="#2b1306" opacity=".28"/>'; }
+      for (i = 0; i < 6; i++) { var c = inDisc(R, 22); g += '<circle cx="' + n(c[0]) + '" cy="' + n(c[1]) + '" r="' + n(4 + R() * 6) + '" fill="#e8ac5a" opacity=".45"/>'; }
+      var a1 = .2 + R() * .3, a2 = a1 + .7, mid = (a1 + a2) / 2, dx = Math.cos(mid) * 14, dy = Math.sin(mid) * 14;
+      g += '<path d="' + sector(64, a1, a2) + '" fill="#f2e9d6"/>';
+      g += '<path d="' + sector(62, a1, a2, dx, dy) + '" fill="#f7e6b8" stroke="#5d2c12" stroke-width="2"/>';
+      var p1 = polar(62, a1), p2 = polar(62, a2);
+      g += '<path d="M' + n(p1[0] + dx) + ' ' + n(p1[1] + dy) + 'A62 62 0 0 1 ' + n(p2[0] + dx) + ' ' + n(p2[1] + dy) + '" fill="none" stroke="#6a3416" stroke-width="6"/>';
+      return [s, g];
+    },
+    cookie: function (R, id) {
+      var s = '<radialGradient id="' + id + 'c" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#dba45c"/><stop offset="1" stop-color="#a5672b"/></radialGradient>';
+      var g = plateBase(id, "#2e3a46", "#26313c"), spots = [[80, 90, 31], [122, 84, 29], [104, 124, 32]];
+      spots.forEach(function (c) {
+        g += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="' + c[2] + '" fill="url(#' + id + 'c)" stroke="#87501e" stroke-width="2"/>';
+        for (var i = 0; i < 3; i++) { var a = R() * 6.28, r1 = R() * c[2] * .6; g += '<path d="M' + n(c[0] + Math.cos(a) * r1) + ' ' + n(c[1] + Math.sin(a) * r1) + 'l' + n((R() - .5) * 14) + ' ' + n((R() - .5) * 14) + '" stroke="#8d5523" stroke-width="1" opacity=".7"/>'; }
+        for (var j = 0; j < 8; j++) {
+          var ang = R() * 6.28, rr = Math.sqrt(R()) * (c[2] - 7), x = c[0] + Math.cos(ang) * rr, y = c[1] + Math.sin(ang) * rr, sz = 3 + R() * 3;
+          g += '<path d="M' + n(x - sz) + ' ' + n(y - sz * .6) + 'L' + n(x + sz * .8) + ' ' + n(y - sz) + 'L' + n(x + sz) + ' ' + n(y + sz * .7) + 'L' + n(x - sz * .7) + ' ' + n(y + sz) + 'Z" fill="#3a1f14"/>';
+        }
+        for (var k = 0; k < 5; k++) { var sa = R() * 6.28, sr = R() * c[2] * .8; g += '<rect x="' + n(c[0] + Math.cos(sa) * sr) + '" y="' + n(c[1] + Math.sin(sa) * sr) + '" width="2.4" height="2" fill="#fff" opacity=".9"/>'; }
+      });
+      return [s, g];
+    }
+  };
+
+  var NAMES = { steak: "Carne", salad: "Ensalada", bread: "Pan", pasta: "Pasta", soup: "Sopa", eggs: "Tortilla", rice: "Arroz", cake: "Tarta", cookie: "Galletas" };
+  var cache = {};
+
+  function plate(r, opts) {
+    opts = opts || {};
+    var key = r.id + (r.foto ? ":f" : "") + (opts.label ? ":l" : "");
+    if (cache[key]) return cache[key];
+    var id = "pl" + (uid++), R = rng(seedOf(r.id)), parts;
+    if (r.foto) {
+      parts = ['<clipPath id="' + id + 'c"><circle cx="100" cy="100" r="74"/></clipPath>',
+        plateBase(id, "#f4f1ea", "#ebe6dc") + '<image href="' + r.foto + '" x="26" y="26" width="148" height="148" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + 'c)"/>'];
+    } else {
+      parts = (FOOD[r.plato] || FOOD.pasta)(R, id);
+    }
+    var label = opts.label ? ' role="img" aria-label="' + String(opts.label).replace(/"/g, "&quot;") + '"' : ' aria-hidden="true"';
+    return (cache[key] = '<svg class="plate" viewBox="0 0 200 200"' + label + "><defs>" + defs(id) + parts[0] + "</defs>" + parts[1] + "</svg>");
+  }
+
+  window.Plates = { draw: plate, types: Object.keys(FOOD), names: NAMES };
+})();
+
+(function(){
+var C=[
+ {id:"harina",nombre:"Harina y tomate",tipo:"Claro",win:true,why:"Fondo blanco roto, como la harina o un mantel de lino. El rojo tomate, el color más apetitoso, se usa como único acento, y el verde oliva solo para «lo tienes» y la nevera.",
+  p:{bg:"#FBF8F3",ink:"#1F1A15",acc:"#C8381E",on:"#FFFFFF",av:"#F0A93B",ring:"conic-gradient(from 200deg,#F6B93B,#F06A35,#D9342B,#C2185B,#F6B93B)",mantel:"hsl(8 52% 82%)",cuadro:"rgba(255,255,255,.5)"},
+  sw:[["#FBF8F3","Harina"],["#1F1A15","Tinta"],["#C8381E","Tomate"],["#E9A23B","Azafrán"],["#5E7F3A","Oliva"]],s:[5,5,4,4.91],plato:"pasta"},
+ {id:"brasa",nombre:"Brasa",tipo:"Oscuro",win:true,why:"Carbón cálido, nunca negro azulado, para que la comida brille como sobre una parrilla. El naranja ascua guía la mirada y el azafrán aparece en los temporizadores.",
+  p:{bg:"#14110F",ink:"#F6F0E8",acc:"#FF6B3D",on:"#1A0C05",av:"#F6B93B",ring:"conic-gradient(from 200deg,#F6B93B,#F06A35,#D9342B,#C2185B,#F6B93B)",mantel:"hsl(14 38% 24%)",cuadro:"rgba(255,255,255,.07)"},
+  sw:[["#14110F","Carbón"],["#F6F0E8","Crema"],["#FF6B3D","Ascua"],["#F6B93B","Azafrán"],["#62D394","Albahaca"]],s:[5,5,5,6.65],plato:"steak"},
+ {id:"huerto",nombre:"Huerto",tipo:"Claro",why:"Fresca y sana, pero el verde como acento transmite dieta antes que antojo, y se confunde con las apps de recetas saludables.",
+  p:{bg:"#F3F5EF",ink:"#18201A",acc:"#2E7A4C",on:"#FFFFFF",av:"#8BC58F",ring:"conic-gradient(#2E7A4C,#9BCB6B,#2E7A4C)",mantel:"hsl(110 30% 82%)",cuadro:"rgba(255,255,255,.5)"},
+  sw:[["#F3F5EF","Hoja"],["#18201A","Tinta"],["#2E7A4C","Albahaca"],["#9BCB6B","Lima"],["#E5533A","Tomate"]],s:[3,4,3,4.77],plato:"salad"},
+ {id:"azul",nombre:"Mesa azul (la actual)",tipo:"Oscuro",no:true,why:"Es elegante, pero el azul es el color que más frena el apetito y hace que los platos parezcan fríos. Se descarta.",
+  p:{bg:"#0D1922",ink:"#EEF4F8",acc:"#FF6F4D",on:"#1A0D08",av:"#5fa8b5",ring:"conic-gradient(#ffc53d,#ff6f4d,#e8336d,#b04df0,#ffc53d)",mantel:"hsl(205 36% 24%)",cuadro:"rgba(255,255,255,.07)"},
+  sw:[["#0D1922","Noche"],["#EEF4F8","Hielo"],["#FF6F4D","Salsa"],["#B04DF0","Morado"],["#5FA8B5","Agua"]],s:[1,3,3,6.47],plato:"soup"},
+ {id:"pizarra",nombre:"Pizarra y pimentón",tipo:"Oscuro",why:"Recuerda a una pizarra de restaurante y tiene buen contraste, pero el gris frío apaga los colores de la comida y resulta corporativa.",
+  p:{bg:"#1D2023",ink:"#F1EEE9",acc:"#E0603A",on:"#170A05",av:"#9AA0A6",ring:"conic-gradient(#E0603A,#9AA0A6,#E0603A)",mantel:"hsl(210 8% 30%)",cuadro:"rgba(255,255,255,.07)"},
+  sw:[["#1D2023","Pizarra"],["#F1EEE9","Tiza"],["#E0603A","Pimentón"],["#9AA0A6","Acero"],["#C9A227","Mostaza"]],s:[3,4,3,4.6],plato:"bread"}
+];
+var K=["Apetito","Protagonismo de la comida","Diferenciación"];
+function mock(c){var p=c.p,st="--p-bg:"+p.bg+";--p-ink:"+p.ink+";--p-acc:"+p.acc+";--p-on:"+p.on+";--p-av:"+p.av+";--p-ring:"+p.ring+";--p-mantel:"+p.mantel+";--p-cuadro:"+p.cuadro;
+ return '<div class="phone" aria-hidden="true"><div class="screen" style="'+st+'"><div class="s-top"><span>f<i></i>odgram</span><span>♡</span></div><div class="s-st"><b></b><b></b><b></b><b></b><b></b></div><div class="s-post"><div class="s-h"><i></i>chef.casa</div><div class="s-m">'+Plates.draw({id:"est-"+c.id,plato:c.plato})+'</div><div class="s-a"><span></span>1.204 Me gusta</div><div class="s-btn">Ver receta</div></div></div></div>';}
+document.getElementById("cands").innerHTML=C.map(function(c){
+ return '<article class="cand'+(c.win?" win":"")+'">'+mock(c)+'<div><p class="mono">'+c.tipo+'</p><h3>'+c.nombre+(c.win?'<span class="badge">Elegida</span>':"")+(c.no?'<span class="badge no">Descartada</span>':"")+'</h3><p class="why">'+c.why+'</p>'+
+ '<div class="sw">'+c.sw.map(function(s){return '<span><i style="background:'+s[0]+'"></i>'+s[1]+'<br>'+s[0]+'</span>';}).join("")+'</div>'+
+ '<div class="scores">'+K.map(function(k,i){return '<div class="sc"><div>'+k+'<b>'+c.s[i]+'/5</b></div><span class="bar"><i style="width:'+c.s[i]*20+'%"></i></span></div>';}).join("")+
+ '<div class="sc"><div>Contraste del acento<b>'+String(c.s[3]).replace(".",",")+':1</b></div><span class="bar"><i style="width:'+Math.min(100,c.s[3]/7*100)+'%;background:var(--ok)"></i></span></div></div></div></article>';}).join("");
+document.getElementById("tabla").innerHTML='<thead><tr><th>Paleta</th><th>Apetito</th><th>Protagonismo</th><th>Diferenciación</th><th>Contraste</th><th>Total</th></tr></thead><tbody>'+
+ C.map(function(c){var t=c.s[0]+c.s[1]+c.s[2];return '<tr'+(c.win?' class="win"':"")+'><td>'+c.nombre+'</td><td>'+c.s[0]+'</td><td>'+c.s[1]+'</td><td>'+c.s[2]+'</td><td>'+String(c.s[3]).replace(".",",")+':1 AA</td><td>'+t+'/15</td></tr>';}).join("")+'</tbody>';
+var F=[["Harina · modo claro","#FBF8F3","#1F1A15",[["Fondo","#FBF8F3"],["Tarjetas","#FFFFFF"],["Texto","#1F1A15"],["Texto secundario","#6F655B"],["Acento tomate","#C8381E"],["Azafrán","#E9A23B"],["Oliva (nevera)","#5E7F3A"]]],
+ ["Brasa · modo oscuro","#14110F","#F6F0E8",[["Fondo","#14110F"],["Tarjetas","#1E1A17"],["Texto","#F6F0E8"],["Texto secundario","#A89E93"],["Acento ascua","#FF6B3D"],["Azafrán","#F6B93B"],["Albahaca (nevera)","#62D394"]]]];
+document.getElementById("final").innerHTML=F.map(function(m){return '<div class="mode" style="background:'+m[1]+';color:'+m[2]+'"><h3>'+m[0]+'</h3>'+m[3].map(function(t){return '<div class="tok"><i style="background:'+t[1]+'"></i><span>'+t[0]+'</span><code>'+t[1]+'</code></div>';}).join("")+'</div>';}).join("");
+var M=[["Tomate",6],["Terracota",16],["Naranja",28],["Azafrán",42],["Oliva",75],["Salvia",100],["Lino",35]];
+document.getElementById("mantels").innerHTML=M.map(function(m){return '<span><i style="background-color:hsl('+m[1]+' '+(m[0]==="Lino"?24:48)+'% 80%)"></i>'+m[0]+'</span>';}).join("");
+})();
+</script>
+</body></html>

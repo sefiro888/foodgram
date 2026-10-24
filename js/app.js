@@ -11,7 +11,7 @@
   var KEY = "foodgram.v3";
 
   // ---------- Estado ----------
-  var store = { likes: {}, saved: {}, mias: [], checks: {}, nevera: [], theme: "", follow: { lucia: 1, marco: 1 }, comments: {}, seen: {} }, canStore = true;
+  var store = { likes: {}, saved: {}, mias: [], checks: {}, nevera: [], theme: "", follow: { lucia: 1, marco: 1, carla: 1 }, comments: {}, seen: {}, cooked: {}, cookDays: [], hideSug: {}, actSeen: 0 }, canStore = true;
   try {
     var raw = JSON.parse(localStorage.getItem(KEY) || "{}");
     Object.keys(store).forEach(function (k) { if (raw[k] != null) store[k] = raw[k]; });
@@ -22,7 +22,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(store)); return true; }
     catch (e) { toast("No queda espacio en este navegador. Prueba sin foto."); return false; }
   }
-  var ui = { q: "", cat: "", serv: {}, view: "", arg: "", tab: "grid", stack: [] };
+  var ui = { q: "", cat: "", serv: {}, view: "", arg: "", tab: "grid", feed: "para-ti", xtab: "recetas", who: "todos", stack: [] };
 
   // ---------- Utilidades ----------
   function esc(s) {
@@ -56,6 +56,8 @@
     grid: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9.3 4v16M14.7 4v16M4 9.3h16M4 14.7h16"/>',
     more: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
     chevron: '<path d="m9 6 6 6-6 6"/>',
+    users: '<circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20c.5-3.4 3.1-5.3 6.5-5.3s6 1.9 6.5 5.3M16 5a3.5 3.5 0 0 1 0 7M18.5 14.9c1.8.6 2.8 2.3 3 5.1"/>',
+    chefhat: '<path d="M7 13.5a4 4 0 1 1 1.6-7.7 4.4 4.4 0 0 1 6.8 0A4 4 0 1 1 17 13.5V19H7Z"/><path d="M7 16h10"/>',
     knife: '<path d="M4 20 15.5 8.5M14 4l6 6-5 1-2-2Z"/>'
   };
   function icon(name) { return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">' + ICONS[name] + "</svg>"; }
@@ -84,7 +86,7 @@
   }
   function allRecipes() { return store.mias.concat(DATA.recetas); }
   function findRecipe(id) { return allRecipes().filter(function (r) { return r.id === id; })[0]; }
-  var ME = { id: "yo", nombre: "Tú", handle: "tu.cocina", titulo: "Cocina de casa", color: "#9fd8ff", bio: "Tus recetas viven en este navegador.", lugar: "Tu cocina", seguidores: 0, seguidos: 0, destacadas: [] };
+  var ME = { id: "yo", nombre: "Tú", handle: "tu.cocina", titulo: "Cocina de casa", color: "#F3C9A8", bio: "Tus recetas viven en este navegador.", lugar: "Tu cocina", seguidores: 0, seguidos: 0, destacadas: [] };
   function chefById(id) { return id === "yo" ? ME : DATA.chefs.filter(function (c) { return c.id === id; })[0]; }
   function chefOf(r) { return chefById(r.chef) || ME; }
   function level(d) { return { "Fácil": 1, "Media": 2, "Difícil": 3 }[d] || 2; }
@@ -111,6 +113,22 @@
   function emptyState(text, cta) {
     return '<div class="empty"><span class="plate-e">' + P.draw({ id: "vacio-plato", plato: "cookie" }) + "</span><p>" + text + "</p>" + (cta || "") + "</div>";
   }
+  function vb(c) { return c.verificado ? '<svg class="vb" viewBox="0 0 24 24" role="img" aria-label="Chef verificado"><path d="M12 2.5l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 21.5l-2.4-1.8-3 .2-.9-2.9-2.5-1.7 1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2Z"/><path d="m8.5 12.2 2.4 2.3 4.6-4.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ""; }
+  function cookedOf(r) { return (r.cocinado || 0) + (store.cooked[r.id] || 0); }
+  function streak() {
+    var days = store.cookDays.slice().sort().reverse(), n = 0, d = new Date();
+    for (var i = 0; i < 400; i++) {
+      var k = d.toISOString().slice(0, 10);
+      if (days.indexOf(k) >= 0) n++; else if (i > 0) break;
+      d.setDate(d.getDate() - 1);
+    }
+    return n;
+  }
+  function mutuals(c) {
+    var mine = Object.keys(store.follow).filter(function (id) { return id !== c.id; });
+    var seed = c.handle.length;
+    return mine.filter(function (id, i) { return (seed + i) % 2 === 0; }).map(chefById).filter(Boolean);
+  }
   function followBtn(c, small) {
     if (c.id === "yo") return "";
     var on = !!store.follow[c.id];
@@ -124,7 +142,7 @@
     var ings = (r.ingredientes || []).slice(0, 7);
     return '<article class="post" data-post="' + esc(r.id) + '">' +
       '<header class="post-h">' + link("chef/" + c.id, "post-av", av(c, "sm", true), ' aria-label="Perfil de ' + esc(c.nombre) + '"') +
-      '<div class="post-who">' + link("chef/" + c.id, "handle", esc(c.handle)) + (c.id !== "yo" && !store.follow[c.id] ? ' · ' + followBtn(c, true) : "") +
+      '<div class="post-who">' + link("chef/" + c.id, "handle", esc(c.handle)) + vb(c) + '<span class="ago"> · ' + ago(r.horas).replace("Hace ", "") + "</span>" + (c.id !== "yo" && !store.follow[c.id] ? ' · ' + followBtn(c, true) : "") +
       "<small>" + esc(c.lugar || "") + "</small></div>" +
       '<button class="icon-btn ghosty" type="button" data-share="' + esc(r.id) + '" aria-label="Copiar enlace">' + icon("more") + "</button></header>" +
       '<div class="media" data-dbl="' + esc(r.id) + '">' +
@@ -146,6 +164,7 @@
       '<button class="act" type="button" data-share="' + esc(r.id) + '" aria-label="Compartir">' + icon("send") + "</button>" +
       '<span class="dots-c" data-dots><i class="on"></i><i></i><i></i></span>' +
       '<button class="act" type="button" data-save="' + esc(r.id) + '" aria-pressed="' + saved + '" aria-label="Guardar">' + icon("bookmark") + "</button></div>" +
+      '<p class="cooked">' + icon("chefhat") + "<span><b>" + cookedOf(r).toLocaleString("es-ES") + "</b> personas lo han cocinado</span></p>" +
       '<p class="likes"><b data-likes="' + esc(r.id) + '">' + likesOf(r).toLocaleString("es-ES") + " Me gusta</b></p>" +
       '<p class="cap"><b>' + esc(c.handle) + "</b> <strong>" + esc(r.titulo) + ".</strong> " + esc(r.secreto) + "</p>" +
       ((r.tags || []).length ? '<p class="tags">' + r.tags.map(function (t) { return '<button type="button" data-tag="' + esc(t) + '">#' + esc(t) + "</button>"; }).join(" ") + "</p>" : "") +
@@ -168,8 +187,8 @@
     var top = allRecipes().slice().sort(function (a, b) { return likesOf(b) - likesOf(a); }).slice(0, 3);
     return '<aside class="side">' +
       '<div class="me-row">' + link("perfil", "", av(ME, "md")) + '<div><b>' + ME.handle + "</b><small>Cocina de casa</small></div></div>" +
-      (sug.length ? '<p class="side-h mono">Cocineros para ti</p>' + sug.map(function (c) {
-        return '<div class="sug">' + link("chef/" + c.id, "", av(c, "sm", true)) + '<div>' + link("chef/" + c.id, "handle", esc(c.handle)) + "<small>" + esc(c.titulo) + "</small></div>" + followBtn(c, true) + "</div>";
+      (sug.length ? '<div class="side-hr"><p class="side-h mono">Cocineros para ti</p>' + link("personas", "see-all", "Ver todo") + "</div>" + sug.slice(0, 5).map(function (c) {
+        return '<div class="sug">' + link("chef/" + c.id, "", av(c, "sm", true)) + '<div>' + link("chef/" + c.id, "handle", esc(c.handle)) + vb(c) + "<small>" + esc(c.titulo) + "</small></div>" + followBtn(c, true) + "</div>";
       }).join("") : "") +
       '<p class="side-h mono">Lo más guardado</p>' + top.map(function (r) {
         return link("receta/" + r.id, "side-rec", '<span class="mantel" ' + mantel(r) + ">" + media(r) + "</span><span><b>" + esc(r.titulo) + "</b><small>" + likesOf(r).toLocaleString("es-ES") + " Me gusta</small></span>");
@@ -177,10 +196,54 @@
       link("nevera", "fridge-card", icon("fridge") + "<span><b>¿Qué hay en tu nevera?</b><small>Marca lo que tienes y te decimos qué cocinar.</small></span>" + icon("chevron")) +
       "</aside>";
   }
+  function sugCards() {
+    var list = DATA.chefs.filter(function (c) { return !store.follow[c.id] && !store.hideSug[c.id]; });
+    if (!list.length) return "";
+    return '<section class="sugs" aria-label="Sugerencias para ti"><div class="sugs-h"><b>Sugerencias para ti</b>' + link("personas", "", "Ver todo") + '</div><div class="sugs-row">' +
+      list.map(function (c) {
+        var m = mutuals(c), rs = allRecipes().filter(function (r) { return r.chef === c.id; });
+        return '<div class="sug-card"><button class="sug-x" type="button" data-hide-sug="' + c.id + '" aria-label="Descartar sugerencia">' + icon("close") + "</button>" +
+          link("chef/" + c.id, "sug-av", av(c, "lg", true)) + '<p class="sug-n">' + link("chef/" + c.id, "handle", esc(c.handle)) + vb(c) + "</p><p class=\"sug-m\">" +
+          (m.length ? "Le sigue " + esc(m[0].handle) : rs.length + (rs.length === 1 ? " receta" : " recetas") + " · " + esc(c.lugar || "")) + "</p>" + followBtn(c) + "</div>";
+      }).join("") + "</div></section>";
+  }
+  function challenge() {
+    return '<button class="reto" type="button" data-tag="sinnata"><span class="reto-ic">' + icon("flame") + '</span><span><span class="mono">Reto de la semana</span><b>#SinNata: la carbonara de verdad</b><small>1.204 personas ya lo han cocinado</small></span>' + icon("chevron") + "</button>";
+  }
   function viewHome() {
     var feed = allRecipes().slice().sort(function (a, b) { return (a.horas || 0) - (b.horas || 0); });
-    return '<div class="home"><div class="feed-col">' + storiesRow() + '<div class="feed">' + feed.map(function (r) { return post(r); }).join("") +
-      '<div class="end"><span class="check">✓</span><p><b>Estás al día</b></p><p>Has visto todas las publicaciones recientes.</p></div></div></div>' + sidebar() + "</div>";
+    if (ui.feed === "siguiendo") feed = feed.filter(function (r) { return r.chef === "yo" || store.follow[r.chef]; });
+    var html = feed.map(function (r, i) { return post(r) + (i === 1 && ui.feed === "para-ti" ? sugCards() : ""); }).join("");
+    if (!feed.length) html = emptyState("Aún no sigues a nadie que haya publicado.", link("personas", "btn", "Descubrir personas"));
+    return '<div class="home"><div class="feed-col">' + storiesRow() +
+      '<div class="ftabs" role="tablist" aria-label="Feed"><button type="button" role="tab" data-feed="para-ti" aria-selected="' + (ui.feed === "para-ti") + '">Para ti</button><button type="button" role="tab" data-feed="siguiendo" aria-selected="' + (ui.feed === "siguiendo") + '">Siguiendo</button></div>' +
+      challenge() + '<div class="feed">' + html +
+      (feed.length ? '<div class="end"><span class="check">✓</span><p><b>Estás al día</b></p><p>Has visto todas las publicaciones recientes.</p>' + link("personas", "btn ghost sm", "Descubrir más cocineros") + "</div>" : "") + "</div></div>" + sidebar() + "</div>";
+  }
+
+  // ---------- Personas ----------
+  function personRow(c) {
+    var rs = allRecipes().filter(function (r) { return r.chef === c.id; }), m = mutuals(c);
+    return '<article class="person">' + link("chef/" + c.id, "person-av", av(c, "md", true)) +
+      '<div class="person-main"><p>' + link("chef/" + c.id, "handle", esc(c.handle)) + vb(c) + "</p><p class=\"person-sub\">" + esc(c.nombre) + " · " + esc(c.titulo) + "</p>" +
+      '<p class="person-meta">' + (m.length ? "Le siguen " + esc(m[0].handle) + (m.length > 1 ? " y " + (m.length - 1) + " más" : "") : "📍 " + esc(c.lugar || "")) + " · " + fmtNum((c.seguidores || 0) + (store.follow[c.id] ? 1 : 0)) + " seguidores</p>" +
+      '<div class="person-th">' + rs.slice(0, 3).map(function (r) { return link("receta/" + r.id, "mantel", media(r), " " + mantel(r) + ' aria-label="' + esc(r.titulo) + '"'); }).join("") + "</div></div>" + followBtn(c) + "</article>";
+  }
+  function peopleList() {
+    var q = norm(ui.q);
+    var list = DATA.chefs.filter(function (c) {
+      var okType = ui.who === "todos" || (ui.who === "chefs" ? c.verificado : ui.who === "comunidad" ? c.comunidad : store.follow[c.id]);
+      return okType && (!q || norm([c.nombre, c.handle, c.titulo, c.lugar].join(" ")).indexOf(q) >= 0);
+    });
+    if (!list.length) return emptyState(ui.who === "siguiendo" ? "Todavía no sigues a nadie." : "No hay nadie con ese nombre.");
+    return list.map(personRow).join("");
+  }
+  function viewPeople() {
+    return '<div class="narrow"><header class="page-h"><h1>Personas</h1><p>Chefs verificados y cocineros de casa. Síguelos para ver sus recetas en «Siguiendo».</p></header>' +
+      '<div class="search">' + icon("explore") + '<label class="sr-only" for="pq">Buscar personas</label><input id="pq" type="search" placeholder="Busca por nombre, @usuario o ciudad" value="' + esc(ui.q) + '" autocomplete="off"></div>' +
+      '<div class="chips" role="group" aria-label="Tipo de cuenta">' + [["todos", "Todos"], ["chefs", "Chefs verificados"], ["comunidad", "Comunidad"], ["siguiendo", "Siguiendo"]].map(function (w) {
+        return '<button class="chip" type="button" data-who="' + w[0] + '" aria-pressed="' + (ui.who === w[0]) + '">' + w[1] + "</button>";
+      }).join("") + '</div><div id="people">' + peopleList() + "</div></div>";
   }
 
   function filtered() {
@@ -202,7 +265,7 @@
   }
   function viewExplore() {
     var cats = unique(allRecipes().map(function (r) { return r.categoria; })).concat(["vegano", "vegetariano", "sin gluten"]);
-    return '<div class="narrow"><div class="search">' + icon("explore") + '<label class="sr-only" for="q">Buscar</label><input id="q" type="search" placeholder="Busca platos, #etiquetas, cocineros o ingredientes" value="' + esc(ui.q) + '" autocomplete="off"></div>' +
+    return '<div class="narrow"><div class="xtabs" role="tablist"><button type="button" role="tab" aria-selected="true">Recetas</button>' + link("personas", "", "Personas", ' role="tab" aria-selected="false"') + '</div><div class="search">' + icon("explore") + '<label class="sr-only" for="q">Buscar</label><input id="q" type="search" placeholder="Busca platos, #etiquetas, cocineros o ingredientes" value="' + esc(ui.q) + '" autocomplete="off"></div>' +
       '<div class="chips" role="group" aria-label="Filtrar">' + cats.map(function (k) { return '<button class="chip" type="button" data-cat="' + esc(k) + '" aria-pressed="' + (ui.cat === k) + '">' + esc(k) + "</button>"; }).join("") + "</div>" +
       '<div class="mosaic" id="mosaic">' + mosaicHtml() + "</div></div>";
   }
@@ -235,8 +298,9 @@
     var cats = isMe ? unique(rs.map(function (r) { return r.categoria; })) : (c.destacadas || []);
     return '<div class="narrow">' + (isMe ? "" : backBtn()) +
       '<header class="prof"><div class="prof-av">' + (isMe ? av(c, "xl") : '<button type="button" class="bare" data-story="' + c.id + '" aria-label="Ver historia">' + av(c, "xl", true) + "</button>") + "</div>" +
-      '<div class="prof-main"><div class="prof-name"><h1>' + esc(c.handle) + "</h1>" + (isMe ? link("nueva", "btn sm ghost", "Publicar") : followBtn(c) + '<button class="btn sm ghost" type="button" data-msg>Mensaje</button>') + "</div>" +
+      '<div class="prof-main"><div class="prof-name"><h1>' + esc(c.handle) + vb(c) + "</h1>" + (isMe ? link("nueva", "btn sm ghost", "Publicar") : followBtn(c) + '<button class="btn sm ghost" type="button" data-msg>Mensaje</button>') + "</div>" +
       '<ul class="counts"><li><b>' + rs.length + "</b> publicaciones</li><li><b>" + fmtNum(foll) + "</b> seguidores</li><li><b>" + seguidos + "</b> seguidos</li></ul>" +
+      (isMe ? '<div class="streak"><span>' + icon("flame") + "<b>" + streak() + '</b> días de racha</span><span>' + icon("chefhat") + "<b>" + Object.keys(store.cooked).reduce(function (t, k) { return t + store.cooked[k]; }, 0) + "</b> recetas cocinadas</span></div>" : "") +
       '<p class="bio"><b>' + esc(c.nombre) + "</b><span>" + esc(c.titulo) + "</span>" + esc(c.bio || "") + (c.lugar ? '<span class="loc">📍 ' + esc(c.lugar) + "</span>" : "") + "</p></div></header>" +
       (cats.length ? '<div class="highlights">' + cats.map(function (h, i) {
         var r = rs[i % Math.max(1, rs.length)] || { id: "hl-" + h, plato: P.types[i % P.types.length], mh: 200 };
@@ -328,7 +392,8 @@
     else if (v === "nevera") html = viewFridge();
     else if (v === "nueva") html = viewNew();
     else if (v === "perfil") html = profileView(ME, true);
-    else if (v === "actividad") html = viewActivity();
+    else if (v === "actividad") { html = viewActivity(); store.actSeen = 1; save(); }
+    else if (v === "personas") html = viewPeople();
     else if (v === "receta") html = viewRecipe(a);
     else if (v === "chef") html = viewChef(a);
     else html = notFound();
@@ -337,13 +402,15 @@
     document.title = r ? r.titulo + " · Foodgram" : "Foodgram";
     dock.innerHTML = '<a class="rail-logo wordmark" href="#/" data-go="">f<span class="o" aria-hidden="true"></span>odgram</a>' + NAV.map(function (n) {
       return '<a href="#/' + n[0] + '" data-go="' + n[0] + '"' + (n[0] === v ? ' aria-current="page"' : "") + ">" + icon(n[2]) + "<span>" + n[1] + "</span></a>";
-    }).join("") + '<a class="rail-only" href="#/actividad" data-go="actividad"' + (v === "actividad" ? ' aria-current="page"' : "") + ">" + icon("heart") + "<span>Actividad</span></a>";
+    }).join("") + '<a class="rail-only" href="#/personas" data-go="personas"' + (v === "personas" ? ' aria-current="page"' : "") + ">" + icon("users") + "<span>Personas</span></a>" +
+      '<a class="rail-only" href="#/actividad" data-go="actividad"' + (v === "actividad" ? ' aria-current="page"' : "") + ">" + icon("heart") + "<span>Actividad</span>" + (store.actSeen ? "" : '<i class="dot" aria-label="novedades"></i>') + "</a>";
+    var hb = document.getElementById("act-dot"); if (hb) hb.hidden = !!store.actSeen;
     if (!keepScroll) { window.scrollTo(0, 0); if (v) main.focus({ preventScroll: true }); }
   }
   function go(path, replace) {
     var p = parse(path);
     if (!replace) ui.stack.push(ui.view + (ui.arg ? "/" + ui.arg : ""));
-    if (p.v !== ui.view) ui.tab = "grid";
+    if (p.v !== ui.view) { ui.tab = "grid"; if (p.v === "personas" || ui.view === "personas") ui.q = ""; }
     ui.view = p.v; ui.arg = p.arg;
     try { history[replace ? "replaceState" : "pushState"](null, "", "#/" + path); } catch (e) { /* visor sin historial */ }
     render();
@@ -392,7 +459,10 @@
     else if (d.follow) {
       var on = !store.follow[d.follow]; on ? (store.follow[d.follow] = 1) : delete store.follow[d.follow]; save();
       toast(on ? "Ahora sigues a " + chefById(d.follow).handle : "Has dejado de seguir a " + chefById(d.follow).handle);
-      render(true);
+      Array.prototype.forEach.call(document.querySelectorAll('[data-follow="' + d.follow + '"]'), function (b) {
+        b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); b.textContent = on ? "Siguiendo" : "Seguir";
+      });
+      if (ui.view === "chef" || ui.feed === "siguiendo" && ui.view === "") render(true);
     } else if (d.story) openStory(d.story);
     else if (d.tag) { ui.q = "#" + d.tag; ui.cat = ""; go("explorar"); }
     else if (d.tagcat) { ui.q = d.tagcat; ui.cat = ""; go("explorar"); }
@@ -412,6 +482,9 @@
     } else if (t.hasAttribute("data-fridge-clear")) { store.nevera = []; save(); render(true); }
     else if (d.cook) openCook(d.cook, +(d.step || 0), d.step != null);
     else if (d.tab) { ui.tab = d.tab; render(true); }
+    else if (d.feed) { ui.feed = d.feed; render(true); }
+    else if (d.who) { ui.who = d.who; Array.prototype.forEach.call(document.querySelectorAll("[data-who]"), function (c) { c.setAttribute("aria-pressed", String(c.dataset.who === ui.who)); }); document.getElementById("people").innerHTML = peopleList(); }
+    else if (d.hideSug) { store.hideSug[d.hideSug] = 1; save(); var card = t.closest(".sug-card"); card && card.remove(); }
     else if (t.hasAttribute("data-msg")) toast("Los mensajes llegarán con las cuentas de usuario.");
     else if (t.hasAttribute("data-back")) {
       var prev = ui.stack.pop(); var p = parse(prev || ""); ui.view = p.v; ui.arg = p.arg;
@@ -437,7 +510,10 @@
     if (s && (e.key === "ArrowRight" || e.key === "ArrowLeft")) { e.preventDefault(); s.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * s.clientWidth, behavior: "smooth" }); }
   });
   function updateMosaic() { var g = document.getElementById("mosaic"); if (g) g.innerHTML = mosaicHtml(); }
-  main.addEventListener("input", function (e) { if (e.target.id === "q") { ui.q = e.target.value; updateMosaic(); } });
+  main.addEventListener("input", function (e) {
+    if (e.target.id === "q") { ui.q = e.target.value; updateMosaic(); }
+    else if (e.target.id === "pq") { ui.q = e.target.value; document.getElementById("people").innerHTML = peopleList(); }
+  });
   main.addEventListener("change", function (e) {
     var t = e.target;
     if (t.dataset.check) {
@@ -610,7 +686,7 @@
       (s.min ? '<div class="timer" id="timer"><svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="0"/><text x="60" y="60" id="t-txt">' + clock(cook.left) + '</text></svg>' +
         '<div class="btns"><button class="btn" type="button" data-timer id="t-btn">' + icon("play") + "Empezar " + s.min + ' min</button><button class="btn ghost" type="button" data-timer-reset>Reiniciar</button></div><p class="sr-only" aria-live="assertive" id="t-live"></p></div>' : "") +
       '</div><div class="cook-nav"><button class="btn ghost" type="button" data-cook-prev' + (cook.i === 0 ? " disabled" : "") + '>Anterior</button>' +
-      '<button class="btn" type="button" data-cook-next>' + (last ? "¡Listo, a la mesa!" : "Siguiente") + "</button></div>";
+      '<button class="btn" type="button" data-cook-next>' + (last ? "¡Lo he cocinado!" : "Siguiente") + "</button></div>";
   }
   function clock(sec) { sec = Math.max(0, Math.ceil(sec)); return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); }
   function paintTimer() {
@@ -651,7 +727,11 @@
     if (t.hasAttribute("data-cook-close")) closeCook();
     else if (t.hasAttribute("data-cook-prev") && cook.i > 0) { cook.i--; drawCook(); }
     else if (t.hasAttribute("data-cook-next")) {
-      if (cook.i < cook.r.pasos.length - 1) { cook.i++; drawCook(); } else { closeCook(); toast("¡Que aproveche!"); }
+      if (cook.i < cook.r.pasos.length - 1) { cook.i++; drawCook(); } else {
+        var cid = cook.r.id, today = new Date().toISOString().slice(0, 10);
+        store.cooked[cid] = (store.cooked[cid] || 0) + 1; if (store.cookDays.indexOf(today) < 0) store.cookDays.push(today); save();
+        closeCook(); toast("¡Que aproveche! Racha: " + streak() + (streak() === 1 ? " día" : " días") + " 🔥"); render(true);
+      }
     } else if (t.hasAttribute("data-timer")) toggleTimer();
     else if (t.hasAttribute("data-timer-reset")) { clearInterval(tick); tick = null; cook.running = false; cook.left = cook.total; document.getElementById("timer").classList.remove("done"); paintTimer(); }
   });

@@ -9,6 +9,9 @@ Recetas con su secreto. Web estática sin dependencias ni paso de compilación: 
 - **Receta completa**: raciones que recalculan cantidades, ingredientes que se tachan y **modo cocina** paso a paso con temporizadores.
 - **¿Qué hay en la nevera?**: marca lo que tienes y ordena las recetas por lo que te falta.
 - **Publicar** con foto o ilustración, etiquetas y temporizadores automáticos («(10 min)» al final de un paso).
+- **Personas**: chefs verificados y comunidad, buscador, filtros, seguidores en común, sugerencias dentro del feed y feed «Siguiendo».
+- **Lo he cocinado**: al terminar el modo cocina suma a la receta y a tu racha de días cocinando.
+- Paleta «Harina» (claro) y «Brasa» (oscuro) según el estudio de color en `docs/estudio-color.html`.
 - Raíl lateral en escritorio, dock en móvil, modo claro y oscuro.
 
 ## Fotos

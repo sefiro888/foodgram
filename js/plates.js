@@ -54,7 +54,7 @@
       return [s, g];
     },
     salad: function (R, id) {
-      var g = plateBase(id, "#5fa8b5", "#e9efdb"), i, p;
+      var g = plateBase(id, "#e8ddc8", "#f3eedf"), i, p;
       for (i = 0; i < 30; i++) { p = inDisc(R, 62); g += '<ellipse cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" rx="' + n(10 + R() * 7) + '" ry="' + n(5 + R() * 3) + '" fill="' + pick(R, ["#4fae5d", "#7cc668", "#3b8f4c", "#a5d77c"]) + '" transform="rotate(' + n(R() * 180) + ' ' + n(p[0]) + ' ' + n(p[1]) + ')"/>'; }
       for (i = 0; i < 4; i++) { p = inDisc(R, 50); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="10" fill="none" stroke="#b8458f" stroke-width="2.2" opacity=".9"/>'; }
       for (i = 0; i < 6; i++) { p = inDisc(R, 54); g += '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="7" fill="#d4ebb0" stroke="#5f9b40" stroke-width="1.6"/><circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="3.6" fill="none" stroke="#a9cf86" stroke-width="1"/>'; }
@@ -89,7 +89,7 @@
     },
     soup: function (R, id) {
       var s = '<radialGradient id="' + id + 's" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#f4743f"/><stop offset="1" stop-color="#bf3a1b"/></radialGradient>';
-      var g = plateBase(id, "#2f5d7c", "#284f6a") + '<circle cx="100" cy="100" r="62" fill="url(#' + id + 's)"/>', i;
+      var g = plateBase(id, "#f1e9da", "#e6dcc8") + '<circle cx="100" cy="100" r="62" fill="url(#' + id + 's)"/>', i;
       var d = ""; for (i = 0; i <= 60; i++) { var t = i / 60, p = polar(2 + t * 34, t * Math.PI * 4.2); d += (i ? "L" : "M") + n(p[0]) + " " + n(p[1]); }
       g += '<path d="' + d + '" fill="none" stroke="#fff3df" stroke-width="4" stroke-linecap="round" opacity=".92"/>';
       for (i = 0; i < 14; i++) { var o = inDisc(R, 56); g += '<circle cx="' + n(o[0]) + '" cy="' + n(o[1]) + '" r="' + n(1.4 + R() * 2.2) + '" fill="#ffb36b" opacity=".7"/>'; }
@@ -137,7 +137,7 @@
     },
     cookie: function (R, id) {
       var s = '<radialGradient id="' + id + 'c" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#dba45c"/><stop offset="1" stop-color="#a5672b"/></radialGradient>';
-      var g = plateBase(id, "#2e3a46", "#26313c"), spots = [[80, 90, 31], [122, 84, 29], [104, 124, 32]];
+      var g = plateBase(id, "#3b2f28", "#33281f"), spots = [[80, 90, 31], [122, 84, 29], [104, 124, 32]];
       spots.forEach(function (c) {
         g += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="' + c[2] + '" fill="url(#' + id + 'c)" stroke="#87501e" stroke-width="2"/>';
         for (var i = 0; i < 3; i++) { var a = R() * 6.28, r1 = R() * c[2] * .6; g += '<path d="M' + n(c[0] + Math.cos(a) * r1) + ' ' + n(c[1] + Math.sin(a) * r1) + 'l' + n((R() - .5) * 14) + ' ' + n((R() - .5) * 14) + '" stroke="#8d5523" stroke-width="1" opacity=".7"/>'; }
