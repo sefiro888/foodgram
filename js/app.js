@@ -9,14 +9,16 @@
   var KEY = "foodgram.v2";
 
   // ---------- Estado ----------
-  var store = { likes: {}, saved: {}, mias: [], checks: {}, revealed: {}, nevera: [], theme: "" };
+  var store = { likes: {}, saved: {}, mias: [], checks: {}, revealed: {}, nevera: [], theme: "" }, canStore = true;
   try {
     var raw = JSON.parse(localStorage.getItem(KEY) || "{}");
     Object.keys(store).forEach(function (k) { if (raw[k] != null) store[k] = raw[k]; });
-  } catch (e) { /* sin almacenamiento: todo funciona en memoria */ }
+  } catch (e) { canStore = false; /* sin almacenamiento: todo funciona en memoria */ }
+  // Devuelve false solo si el almacenamiento existe pero está lleno (p. ej. por fotos grandes).
   function save() {
+    if (!canStore) return true;
     try { localStorage.setItem(KEY, JSON.stringify(store)); return true; }
-    catch (e) { toast("Este navegador no deja guardar más datos"); return false; }
+    catch (e) { toast("No queda espacio en este navegador. Prueba sin foto."); return false; }
   }
   var ui = { q: "", cat: "", serv: {}, view: "", arg: "", stack: [] };
 
