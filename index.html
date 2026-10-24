@@ -3,32 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Foodgram · Muro de Secretos de cocina</title>
-<meta name="description" content="Foodgram: la red social de los secretos de cocina. Descubre, guarda y comparte recetas de chefs y cocineros caseros.">
-<meta name="theme-color" content="#1e3042">
+<title>Foodgram</title>
+<meta name="description" content="Foodgram: recetas con su secreto. Gira el plato, ajusta raciones, cocina paso a paso con temporizador y descubre qué puedes hacer con lo que hay en tu nevera.">
+<meta name="theme-color" content="#0d1922">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Foodgram · Muro de Secretos">
-<meta property="og:description" content="Susurros de cocina y maravillas culinarias: recetas con su secreto.">
+<meta property="og:title" content="Foodgram · Recetas con secreto">
+<meta property="og:description" content="Cada receta guarda un truco. Gira el plato, revela el secreto y cocina paso a paso.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f97316'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle'%3E%F0%9F%8D%B3%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23f4f1ea'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23ff6f4d' stroke-width='10'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ff6f4d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+<!--APP-->
 <a class="skip" href="#contenido">Saltar al contenido</a>
-<header class="topbar">
-  <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-  </button>
-  <h1 class="brand"><a href="#/">Kitchen Secrets</a></h1>
-  <a class="icon-btn" href="#/nueva" aria-label="Publicar una receta">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-  </a>
+<header class="wrap top">
+  <a class="wordmark" href="#/" data-go="" aria-label="Foodgram, inicio">f<span class="o" aria-hidden="true"></span>odgram</a>
+  <div class="top-actions">
+    <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.5A8 8 0 1 1 10.5 4a6.5 6.5 0 0 0 9.5 9.5Z"/></svg></button>
+  </div>
 </header>
-<main id="contenido" tabindex="-1" aria-live="polite"></main>
-<nav class="bottom" aria-label="Principal"></nav>
+<main id="contenido" class="wrap" tabindex="-1"></main>
+<nav class="dock" id="dock" aria-label="Principal"></nav>
+<div class="cook" id="cook" role="dialog" aria-modal="true" aria-label="Modo cocina" hidden></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<noscript><p class="notice">Foodgram necesita JavaScript para funcionar.</p></noscript>
+<noscript><p class="wrap">Foodgram necesita JavaScript.</p></noscript>
+<!--/APP-->
 <script src="js/data.js"></script>
+<script src="js/plates.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

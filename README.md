@@ -1,22 +1,23 @@
-# Foodgram · Kitchen Secrets
+# Foodgram
 
-Red social de secretos de cocina. Web estática sin dependencias ni paso de compilación: abre `index.html` o publica la carpeta (GitHub Pages, Netlify…).
+Recetas con su secreto. Web estática sin dependencias ni paso de compilación: abre `index.html` o publica la carpeta (GitHub Pages, Netlify…).
 
-## Qué hace
-- Muro con recetas, búsqueda por plato, chef o ingrediente y filtros por categoría y dieta.
-- Detalle de receta con ingredientes marcables y pasos.
-- Me gusta, guardar y compartir (Web Share o copiar enlace).
-- Publicar recetas propias con foto (se reduce a 900 px).
-- Explorar por categorías y chefs, perfiles y lista de guardadas.
-- Modo claro y oscuro, accesible con teclado, respeta «reducir movimiento».
+## Qué tiene
+- **Platos ilustrados**: cada receta se dibuja en SVG vista desde arriba, sobre un mantel de cuadros con su propio color. Se puede girar el plato con el dedo.
+- **El secreto sellado**: cada ficha guarda el truco borroso hasta que lo tocas.
+- **Raciones que recalculan** las cantidades (½, ¼, g → kg…).
+- **Modo cocina**: pantalla completa paso a paso, temporizadores con aviso sonoro y vibración, mantiene la pantalla encendida y funciona con las flechas del teclado.
+- **¿Qué hay en la nevera?**: marca lo que tienes y ordena las recetas por lo que te falta.
+- Me gusta, recetario guardado, publicar recetas propias (con ilustración o foto, y temporizador si pones «(10 min)» en un paso), perfiles de chef, modo claro y oscuro.
 
 ## Estructura
 - `index.html`: esqueleto de la página.
-- `css/app.css`: estilos (sin Tailwind ni CDN).
-- `js/data.js`: datos de ejemplo; sustituir por una API cuando haya backend.
-- `js/app.js`: rutas por hash, vistas y estado (guardado en `localStorage`).
+- `css/app.css`: estilos.
+- `js/data.js`: chefs y recetas de ejemplo.
+- `js/plates.js`: generador de ilustraciones de platos.
+- `js/app.js`: rutas, vistas, estado (en `localStorage`) y modo cocina.
+- `tools/bundle.py`: junta todo en un único HTML (`python3 tools/bundle.py`, sale en `dist/`).
 
 ## Pendiente
-- Alojar las imágenes de ejemplo en el repo: ahora apuntan a enlaces temporales de Google y, si fallan, se muestra un icono.
-- Backend y cuentas de usuario; hoy todo vive en el navegador.
+- Backend y cuentas: hoy todo vive en el navegador de cada persona.
 - Service Worker para uso sin conexión y pruebas automáticas.
