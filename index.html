@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Foodgram</title>
 <meta name="description" content="Foodgram: recetas con su secreto. Gira el plato, ajusta raciones, cocina paso a paso con temporizador y descubre qué puedes hacer con lo que hay en tu nevera.">
-<meta name="theme-color" content="#0d1922">
+<meta name="theme-color" content="#faf8f5">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Foodgram · Recetas con secreto">
 <meta property="og:description" content="Cada receta guarda un truco. Gira el plato, revela el secreto y cocina paso a paso.">
@@ -19,17 +19,20 @@
 <body>
 <!--APP-->
 <a class="skip" href="#contenido">Saltar al contenido</a>
-<header class="wrap top">
+<header class="top">
   <a class="wordmark" href="#/" data-go="" aria-label="Foodgram, inicio">f<span class="o" aria-hidden="true"></span>odgram</a>
   <div class="top-actions">
     <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13.5A8 8 0 1 1 10.5 4a6.5 6.5 0 0 0 9.5 9.5Z"/></svg></button>
+    <a class="icon-btn" href="#/actividad" data-go="actividad" aria-label="Actividad"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.8-7.5-10.4A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.6C19.5 15.2 12 20 12 20Z"/></svg></a>
   </div>
 </header>
-<main id="contenido" class="wrap" tabindex="-1"></main>
 <nav class="dock" id="dock" aria-label="Principal"></nav>
+<main id="contenido" tabindex="-1"></main>
+<div class="sheet" id="sheet" hidden></div>
+<div class="story" id="story" role="dialog" aria-modal="true" aria-label="Historia" hidden></div>
 <div class="cook" id="cook" role="dialog" aria-modal="true" aria-label="Modo cocina" hidden></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<noscript><p class="wrap">Foodgram necesita JavaScript.</p></noscript>
+<noscript><p>Foodgram necesita JavaScript.</p></noscript>
 <!--/APP-->
 <script src="js/data.js"></script>
 <script src="js/plates.js"></script>

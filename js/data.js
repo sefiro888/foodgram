@@ -73,3 +73,29 @@ window.FOODGRAM_DATA = {
     }
   ]
 };
+
+// Capa social (datos de ejemplo): perfiles, comentarios, etiquetas y fotos opcionales.
+(function (D) {
+  var social = {
+    marco: { handle: "marco.brasas", lugar: "Asador Rossi · Bilbao", seguidores: 48200, seguidos: 312, destacadas: ["Brasas", "Salsas", "Cuchillos"], directo: true },
+    elena: { handle: "elena.huerto", lugar: "Huerto Vance · Valencia", seguidores: 31900, seguidos: 540, destacadas: ["Huerto", "Aliños", "Temporada"] },
+    silas: { handle: "silas.masamadre", lugar: "Horno Thorne · Madrid", seguidores: 22700, seguidos: 128, destacadas: ["Masa madre", "Harinas", "Horno"] },
+    lucia: { handle: "lucia.trattoria", lugar: "Trattoria Marini · Barcelona", seguidores: 56400, seguidos: 890, destacadas: ["Pasta fresca", "Nonna", "Huevos"] },
+    noor: { handle: "noor.dulce", lugar: "Obrador Haddad · Sevilla", seguidores: 39100, seguidos: 402, destacadas: ["Tartas", "Galletas", "Caramelo"] }
+  };
+  D.chefs.forEach(function (c) { Object.assign(c, social[c.id]); });
+  var extra = {
+    "steak-mantequilla": { likes: 3412, horas: 2, tags: ["brasas", "chuleton", "mantequilla"], comentarios: [["lucia", "Ese baño final es pura poesía 🔥"], ["silas", "Con pan de masa madre para mojar, por favor."], ["elena", "¿Y una ensalada ácida al lado para cortar la grasa?"]] },
+    "ensalada-acida": { likes: 1876, horas: 5, tags: ["huerto", "ensalada", "limon"], comentarios: [["noor", "La cebolla macerada lo cambia todo, confirmo."], ["marco", "Por fin una ensalada que no me aburre."]] },
+    "pan-masa-madre": { likes: 2950, horas: 9, tags: ["masamadre", "pan", "horno"], comentarios: [["lucia", "Esa oreja 😍"], ["marco", "85 % de hidratación… valiente."], ["noor", "¿Cuánto tiempo de frío exactamente?"]] },
+    "carbonara-sin-nata": { likes: 5204, horas: 14, tags: ["carbonara", "pasta", "sinnata"], comentarios: [["marco", "Gracias por defender la verdad."], ["elena", "Guanciale o nada."], ["silas", "La hice anoche. Ni una gota de nata. Perfecta."]] },
+    "sopa-tomate-asado": { likes: 1320, horas: 22, tags: ["sopa", "tomate", "invierno"], comentarios: [["noor", "Con un picatoste de pan de Silas, ya."]] },
+    "tortilla-jugosa": { likes: 4433, horas: 30, tags: ["tortilla", "conCebolla", "huevos"], comentarios: [["marco", "Con cebolla, por supuesto."], ["silas", "Que tiemble, que tiemble."]] },
+    "paella-socarrat": { likes: 6120, horas: 40, tags: ["paella", "socarrat", "arroz"], comentarios: [["elena", "Ese crepitar 🥹"], ["lucia", "Aprendiendo del maestro."], ["noor", "Me guardo el truco del paño."]] },
+    "tarta-queso-vasca": { likes: 7012, horas: 52, tags: ["tartadequeso", "postre", "horno"], comentarios: [["lucia", "La mejor del mundo, sin discusión."], ["marco", "Quemada pero no tanto… o sí."]] },
+    "cookies-sal": { likes: 3890, horas: 70, tags: ["cookies", "chocolate", "sal"], comentarios: [["elena", "24 horas de reposo, apuntado."], ["silas", "La sal en escamas es la clave."]] }
+  };
+  D.recetas.forEach(function (r) { Object.assign(r, extra[r.id]); });
+  // Fotos reales: pon aquí la URL (o ruta local) de cada receta. Si falta o no carga, se usa la ilustración.
+  D.fotos = {};
+})(window.FOODGRAM_DATA);
