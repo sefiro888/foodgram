@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be_Vietnam_Pro:wght@300;400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .watermark-pot {
+            position: fixed;
+            top: 15%;
+            right: -5%;
+            font-size: 20rem;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            transform: rotate(15deg);
+        }
+        .watermark-whisk {
+            position: fixed;
+            bottom: 10%;
+            left: -2%;
+            font-size: 15rem;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            transform: rotate(-20deg);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-dim": "#654c00",
+                        "error-dim": "#a70138",
+                        "on-primary-container": "#4a0800",
+                        "surface-tint": "#b22200",
+                        "secondary-fixed": "#6bfe9c",
+                        "inverse-surface": "#000f1e",
+                        "tertiary": "#745700",
+                        "error": "#b41340",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffefef",
+                        "error-container": "#f74b6d",
+                        "surface": "#f2f7ff",
+                        "inverse-on-surface": "#8c9fb4",
+                        "surface-container-low": "#e8f2ff",
+                        "primary-fixed": "#ff785a",
+                        "surface-bright": "#f2f7ff",
+                        "tertiary-fixed": "#ffc300",
+                        "on-tertiary-container": "#574000",
+                        "on-primary-fixed": "#000000",
+                        "on-surface-variant": "#4b5d70",
+                        "surface-container-highest": "#c4e0ff",
+                        "secondary": "#006a35",
+                        "primary-container": "#ff785a",
+                        "on-secondary": "#cdffd4",
+                        "on-tertiary-fixed": "#3f2e00",
+                        "primary-dim": "#9c1c00",
+                        "surface-container-high": "#cee5ff",
+                        "secondary-dim": "#005c2d",
+                        "background": "#f2f7ff",
+                        "secondary-container": "#6bfe9c",
+                        "surface-container": "#d9eaff",
+                        "on-tertiary": "#fff1da",
+                        "on-surface": "#1e3042",
+                        "on-secondary-container": "#005f2f",
+                        "surface-dim": "#bad7f8",
+                        "on-primary": "#ffefec",
+                        "on-background": "#1e3042",
+                        "surface-variant": "#c4e0ff",
+                        "outline": "#66798d",
+                        "on-secondary-fixed-variant": "#006a35",
+                        "on-secondary-fixed": "#004a23",
+                        "outline-variant": "#9cafc5",
+                        "inverse-primary": "#fe5733",
+                        "primary-fixed-dim": "#ff5c39",
+                        "on-tertiary-fixed-variant": "#624900",
+                        "secondary-fixed-dim": "#5bef90",
+                        "on-error-container": "#510017",
+                        "tertiary-fixed-dim": "#eeb600",
+                        "primary": "#b22200",
+                        "tertiary-container": "#ffc300",
+                        "on-primary-fixed-variant": "#5b0c00"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#1e3042] text-on-primary font-body antialiased min-h-screen">
+<!-- Watermarks -->
+<span class="material-symbols-outlined watermark-pot text-outline-variant" data-icon="cooking">cooking</span>
+<span class="material-symbols-outlined watermark-whisk text-outline-variant" data-icon="skillet">skillet</span>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-gray-900/70 backdrop-blur-xl shadow-2xl shadow-black/20 flex justify-between items-center px-6 h-20 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-orange-700 dark:text-orange-500 text-2xl hover:scale-110 transition-transform duration-200" data-icon="notifications_active">notifications_active</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="notifications_paused">notifications_paused</span>
+<span class="material-symbols-outlined text-primary-fixed" data-icon="egg_alt">egg_alt</span>
+<span class="material-symbols-outlined text-primary-fixed" data-icon="soup_kitchen">soup_kitchen</span>
+</div>
+</div>
+<h1 class="text-2xl font-black text-orange-700 dark:text-orange-500 uppercase tracking-tighter font-headline">Kitchen Secrets</h1>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-orange-700 dark:text-orange-500 text-2xl hover:scale-110 transition-transform duration-200" data-icon="cooking">cooking</span>
+</div>
+</header>
+<main class="pt-28 pb-32 max-w-2xl mx-auto px-4 relative z-10">
+<!-- Feed Title -->
+<div class="mb-10 text-center">
+<h2 class="font-headline text-5xl font-extrabold tracking-tighter text-surface-container-lowest mb-2">Muro de Secretos</h2>
+<p class="text-outline-variant font-medium tracking-wide text-sm uppercase">Kitchen whispers and culinary wonders</p>
+</div>
+<!-- Social Feed List -->
+<div class="flex flex-col gap-12">
+<!-- Post 1: The Steak -->
+<article class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img alt="Chef Portrait" class="w-full h-full object-cover" data-alt="Portrait of a smiling professional chef" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4Y8CCfg3fIQutoz1tLTG979QUIv-U0uHBrwglkd_0Q9LOKHA-mw8AvmPirzLDFOtrmHmJvxtMhxgu96fM7vYzolnBw8r3ER4g-JF7soT4LvDtT17mYyefYfqwCXz3coGhddv-f4_J_bB0D1z-9XFq0kr1e-tacuEZ0Ce_oHPEigIwTE3hm47zO0s1EdYgVvTY_s0Dn86-YM8lnpls1XKmwAdege4ZIZYv8ncohvl885uqJtXtIPS_s1zPjU209NS8GH5_sPHKJquY"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Marco Rossi</h3>
+<p class="text-xs text-primary-fixed font-bold uppercase tracking-widest">Maître Rôtisseur</p>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-gray-900 shadow-2xl">
+<img alt="Perfect Steak" class="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A juicy perfectly cooked ribeye steak on a wooden board" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHyvYhSviOV1qXaiuJhnK-UPlJxQP2M6cD9sbcPvndb-TXuoHwMEhI1PqPpL4yvupF3RsMvTvDU5nF2XgUXBuv6OHIQrvN-oRzTojDxyRGE4YofXzkUCgeTMBk5hu0RDH-lRT9V9VHMQOWdiSy83DZvGxmDOfZWp-O-pIY6ywUhQI2JMm4MYkfcA7YstxjP92H_VOefoly9-MiAUgUmV1pWhg_g3_X_plzh0yi6ftw-PYm-_YlbB5S3HO2GmKexIfYauJ0-tmdHy75"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="glass-card p-6 rounded-xl border border-white/10">
+<h4 class="font-headline text-2xl font-bold text-white mb-2">The Butter-Baste Ritual</h4>
+<p class="text-surface-container-highest/90 text-sm font-body leading-relaxed mb-6">"The secret to that deep mahogany crust isn't the heat—it's the cold butter added in the final 60 seconds with crushed garlic and thyme."</p>
+<button class="bg-primary hover:bg-primary-fixed-dim text-white font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 w-full transition-all active:scale-95">
+<span class="text-sm tracking-widest uppercase">Discover More</span>
+<span class="material-symbols-outlined text-lg" data-icon="arrow_right_alt">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 2: Vibrant Salad -->
+<article class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary-fixed">
+<img alt="Chef Portrait" class="w-full h-full object-cover" data-alt="Portrait of a young female pastry chef" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXikm3-Em0I97OFAspUB3vEwBPYccnfLPofl-AyOi7HbGTjiyF6cwiag-phGMGbfEROpADCDRL5nSWHFlEAce6X7RNjL6GcQ3fsfJ3BvjioYHl-dSXxQWealt_ZMgbtDOYN53t8-fKtEZnHag4HSXoMWQ5l7rllCc3d_xlFVaPVsY6V6pqZnnu04LbXDWMCUZ_UbtySJdE75_ZAKgBxmCPCuDIV0XPsnnBMsDblknZ_emkJNUgnxQSZdRgeZyFdpkEj3DGywLMVjOm"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Elena Vance</h3>
+<p class="text-xs text-secondary-fixed font-bold uppercase tracking-widest">Garden Alchemist</p>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-gray-900 shadow-2xl">
+<img alt="Vibrant Salad" class="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A colorful bowl of fresh Mediterranean salad with feta and olives" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn8Fc1H_iGnweOqiue0_vw81bOmsFEy_w6angkbHXUqhpt2fth90mhxm_YuqsQPjMlsWspMFZD_uoIS6PgCWy_C682ShYkfKrnHt8m4GVzcsqnzi9m5xTh-9GPL-PxbSsAlYfRakOdTKZcjyXTxFNuG3GuTlk4yrt8a3ElHLwqy51lo9Fw9K6cs9ZNfTGM6yxRNHrrVi7LZEpIkLVGaFhlD1UJLIt-60s2ddT7w_WT5dmvG14QhhK7IodqpR8-4i6UafRhCohoG51V"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="glass-card p-6 rounded-xl border border-white/10">
+<h4 class="font-headline text-2xl font-bold text-white mb-2">The Acid Balance</h4>
+<p class="text-surface-container-highest/90 text-sm font-body leading-relaxed mb-6">"Most home salads are missing a punch of citrus. Macerate your red onions in lemon juice for 10 minutes before tossing. It changes everything."</p>
+<button class="bg-primary hover:bg-primary-fixed-dim text-white font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 w-full transition-all active:scale-95">
+<span class="text-sm tracking-widest uppercase">Discover More</span>
+<span class="material-symbols-outlined text-lg" data-icon="arrow_right_alt">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 3: Artisan Bread -->
+<article class="group">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-tertiary-fixed">
+<img alt="Chef Portrait" class="w-full h-full object-cover" data-alt="Portrait of an older artisan baker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVMMqRA8cAhupzXh-KUAESK7gCRJNUj9f6lefw5iKlfX36iQfIMJGCIkhk9RPT-51qT8BmicwuJJehacQ5qMJ06V-d9tgmBWPH1jx3l4ATx5hDVSWke-pmEs64Vs4IeHX64qoKRFMw9B9DtILnP9MbrxU8ZFIQDnnrGJ09tv6lJAL9sOXtvtw4XhRkSK5ZxkQQjS4joY6rKkg59J9vDqSEd2vLFjS0pcbV-PgORVEvOX_tgARhoom-iooH0ggJjffKtTw6Jv8KGc2U"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-white text-lg leading-tight">Silas Thorne</h3>
+<p class="text-xs text-tertiary-fixed font-bold uppercase tracking-widest">Master Baker</p>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-gray-900 shadow-2xl">
+<img alt="Sourdough" class="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Crispy golden artisan sourdough bread being sliced" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSnW9Gxhpoan732daZzfP7C-V7zCJLjvkkrHhu3itYLhQ0JKB3Vdiw-lgRlPbk22ZgcxW3jtLvyZQIEEFlZuniUdeJF0a3qnSkcyvimVYJ3wzMnbXRI5g17lQTPQcFxHdXIOmFf3yydKCpP6nIzkGP3P7L66zpQdjV7IZ7GBJGrgjAAnEL7_fbkFIB8zLDRIMlEVX0q59H9PKv5Xy4C33XqjQ2iQSEx5HpZlBCNycXAOkBsCXlcBBJKC0V6rgwizlAThDVuWoxKsVL"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="glass-card p-6 rounded-xl border border-white/10">
+<h4 class="font-headline text-2xl font-bold text-white mb-2">The Crumb Secret</h4>
+<p class="text-surface-container-highest/90 text-sm font-body leading-relaxed mb-6">"Don't be afraid of high hydration. A 85% water ratio is difficult to handle, but the resulting airy crumb is worth every sticky finger."</p>
+<button class="bg-primary hover:bg-primary-fixed-dim text-white font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 w-full transition-all active:scale-95">
+<span class="text-sm tracking-widest uppercase">Discover More</span>
+<span class="material-symbols-outlined text-lg" data-icon="arrow_right_alt">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-gray-900/80 backdrop-blur-2xl rounded-t-[2.5rem] border-t border-white/5 flex justify-around items-center px-4 pb-6 pt-2 shadow-[0_-10px_40px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-orange-400 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-bold uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-orange-700/20 text-orange-500 rounded-full p-3 scale-110 -translate-y-2 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="explore">explore</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-bold uppercase tracking-widest">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-orange-400 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="add_circle">add_circle</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-bold uppercase tracking-widest">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-orange-400 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="bookmark">bookmark</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-bold uppercase tracking-widest">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 p-2 hover:text-orange-400 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-bold uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>
